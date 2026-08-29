@@ -33,7 +33,8 @@ function handleSearch(){
 }
 
 function handleStatistics(o = []){
-    if(!arrayNotEmpty) return
+    est.innerHTML = ""
+    if(!arrayNotEmpty(o)) return
     console.log("estatistics")
     console.log(o)
     const population = o.reduce((a, b) => a + b.population, 0)
