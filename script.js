@@ -222,10 +222,10 @@ document.addEventListener("click", (e) =>{
             const h1sr = document.createElement("h1")
             const h1f = document.createElement("h1")
             console.log(country)
-            h1m.innerText = `Moedas: ${country.currencies.reduce((a, b, ia) => a + ((ia == 0)? "" : ", ")+ b.code, "")}`
-            h1idi.innerText = `Idiomas: ${country.languages.reduce((a, b, ia) => a + ((ia == 0)? "" : ", ") + b.name, "")}`
-            h1sr.innerText = `Sub-Regiao: ${country.subregion}`
-            h1f.innerText = `Fronteiras: ${country.borders.reduce((a, b, ia) => a + ((ia == 0)? "" : ", ") + b, "")}`
+            h1m.innerText = `Moedas: ${country.currencies.reduce((a, b, ia) => a + ((ia == 0)? "" : ", ")+ b.code, "") || "Não há!"}`
+            h1idi.innerText = `Idiomas: ${country.languages.reduce((a, b, ia) => a + ((ia == 0)? "" : ", ") + b.name, "") || "Não há!"}`
+            h1sr.innerText = `Sub-Regiao: ${country.subregion || "Não há!"}`
+            h1f.innerText = `Fronteiras: ${country.borders.reduce((a, b, ia) => a + ((ia == 0)? "" : ", ") + b, "") || "Não há!"}`
             divToAdd.appendChild(h1m)
             divToAdd.appendChild(h1idi)
             divToAdd.appendChild(h1sr)
