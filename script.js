@@ -196,7 +196,7 @@ document.addEventListener("click", (e) =>{
         console.log("name element", nameElement)
         let name = nameElement.innerText.slice(5).toLowerCase()
         let hasReplaced = false;
-        if(name.includes(" ")){ name = name.replace(" ", "-")
+        if(name.includes(" ")){ name = name.replaceAll(" ", "-")
             hasReplaced = true;
         }
         const divCountry = document.querySelector(`.${name}`)
@@ -207,7 +207,7 @@ document.addEventListener("click", (e) =>{
         else{
             if(!arrayNotEmpty(currentData)) return
             let nameToSearch;
-            if(hasReplaced) nameToSearch = name.replace("-", " ")
+            if(hasReplaced) nameToSearch = name.replaceAll("-", " ")
             else nameToSearch = name
             const country = currentData.find(a => a.names.common.toLowerCase() === nameToSearch)
             if(country === undefined){
