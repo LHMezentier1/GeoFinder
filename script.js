@@ -14,6 +14,7 @@ const order = Object.freeze({NAME: 1, AREA: 2, POPULATION: 3})
 const arrayNotEmpty = (a) => Array.isArray(a) && a.length > 0
 
 function handleSearch(){
+    est.innerHTML = ""
     const n = input.value
     if(n.trim() == "" && !lastSearchDone){
         console.log("nothing")
@@ -56,15 +57,11 @@ function handleStatistics(o = []){
 }
 
 function addToList(isSearch = false, data = []){
-    let o;
-    if(!isSearch) o = dataToAdd
-    else{
-         o = data
-         lista.innerHTML = ""
-    }
+    lista.innerHTML = ""
+    let o = dataToAdd
+    if(isSearch) o = data
     if(!arrayNotEmpty(o)){
         console.log(o)
-        lista.innerHTML = ""
         console.log("Não foi possivel adicionar!")
         return
     }
