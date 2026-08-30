@@ -1,11 +1,11 @@
 
 const btn1 = document.querySelector("#apkl")
-const btn2 = document.querySelector("#load")
 const lista = document.querySelector("#listaPaises")
 const filter = document.querySelector("#filtroRegiao")
 const input = document.querySelector("#campoBusca")
 const est = document.querySelector("#estatisticas")
 let key = ""
+let allCountries;
 let dataToAdd;
 let lastSearchDone = false;
 let currentData;
@@ -14,7 +14,6 @@ const order = Object.freeze({NAME: 1, AREA: 2, POPULATION: 3})
 const arrayNotEmpty = (a) => Array.isArray(a) && a.length > 0
 
 function handleSearch(){
-    est.innerHTML = ""
     const n = input.value
     if(n.trim() == "" && !lastSearchDone){
         console.log("nothing")
@@ -62,6 +61,7 @@ function addToList(isSearch = false, data = []){
     if(isSearch) o = data
     if(!arrayNotEmpty(o)){
         console.log(o)
+        est.innerHTML = ""
         console.log("Não foi possivel adicionar!")
         return
     }
@@ -94,7 +94,7 @@ function addToList(isSearch = false, data = []){
     handleStatistics(o)
 }
 
-async function CarregarTodos(o){
+async function CarregarTodos(){
 try{
   const response = [
   await fetch(`https://api.restcountries.com/countries/v5?limit=100`,
@@ -110,6 +110,25 @@ try{
   lista.innerHTML = ""
   const d = []
   dados.forEach(a => a.data.objects.forEach(b => d.push(b)))
+  allCountries = d
+  seeRegions()
+}catch(e) {console.error("Erro", e)}}
+
+function CarregarComRegiao(region, o){
+    lista.innerHTML = ""
+    const data = allCountries.filter(a => a.region == region)
+    if(o == order.POPULATION) data.sort((a,b) => a.population - b.population)
+    if(o == order.AREA) data.sort((a,b) => a.area.kilometers - b.area.kilometers)
+    if(o == order.NAME) data.sort((a, b) => a.names.common.localeCompare(b.names.common))
+    dataToAdd = data
+    addToList()
+    console.log(region)
+    lastSearchDone = false
+    handleSearch()
+}
+
+function adicionarTodos(o){
+  const d = allCountries
   if(o == order.POPULATION) d.sort((a,b) => a.population - b.population)
   if(o == order.AREA) d.sort((a,b) => a.area.kilometers - b.area.kilometers)
   if(o == order.NAME) d.sort((a,b) => a.names.common.localeCompare(b.names.common))
@@ -118,44 +137,28 @@ try{
   addToList()
   lastSearchDone = false
   handleSearch()
-}catch(e) {console.error("Erro", e)}}
-
-async function CarregarComRegiao(region, o){
-    try{
-    const response = await fetch(`https://api.restcountries.com/countries/v5?limit=100&region=${region}`, { headers: { 'Authorization': `Bearer ${key}` } })
-    const data = await response.json();
-    lista.innerHTML = ""
-    if(o == order.POPULATION) data.data.objects.sort((a,b) => a.population - b.population)
-    if(o == order.AREA) data.data.objects.sort((a,b) => a.area.kilometers - b.area.kilometers)
-    if(o == order.NAME) data.data.objects.sort((a, b) => a.names.common.localeCompare(b.names.common))
-    dataToAdd = data.data.objects
-    addToList()
-    console.log(region)
-    lastSearchDone = false
-    handleSearch()
-    } catch(e){console.error("Erro:", e)}
 }
 
 
-function seeRegions(order, isSearch = false){
+function seeRegions(order){
     const value = filter.value
     switch(value){
         case "Africa":
-            CarregarComRegiao("Africa", order, isSearch)
+            CarregarComRegiao("Africa", order)
             break
         case "Americas":
-            CarregarComRegiao("America", order, isSearch)
+            CarregarComRegiao("Americas", order)
             break
         case "Asia":
-            CarregarComRegiao("Asia", order, isSearch)
+            CarregarComRegiao("Asia", order)
             break
         case "Europe":
-            CarregarComRegiao("Europe", order, isSearch)
+            CarregarComRegiao("Europe", order)
             break
         case "Oceania":
-            CarregarComRegiao("Oceania", order, isSearch)
+            CarregarComRegiao("Oceania", order)
             break
-        default: CarregarTodos(order, isSearch)
+        default: adicionarTodos(order)
     }
 }
 
@@ -163,8 +166,10 @@ const ordenarPorNome = ( ) => seeRegions(order.NAME)
 const ordenarPorPopulacao = ( ) => seeRegions(order.POPULATION)
 const ordenarPorArea = ( ) => seeRegions(order.AREA)
 
-btn1.addEventListener("click", () => key = document.querySelector("#ak").value || "rc_live_dc3a7c949f5a4871b7ef30c97df2e226")
-btn2.addEventListener("click", () => {if(key == "") alert("Defina uma key primeiro!"); else seeRegions()})
+btn1.addEventListener("click", () => {
+    key = document.querySelector("#ak").value || "rc_live_dc3a7c949f5a4871b7ef30c97df2e226"
+    CarregarTodos()
+})
 filter.addEventListener("change", () => {if(key == "") alert("Defina uma key primeiro!"); else seeRegions()})
 input.addEventListener("input", handleSearch)
 document.addEventListener("click", (e) =>{
