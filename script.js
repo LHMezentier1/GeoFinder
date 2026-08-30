@@ -195,9 +195,17 @@ document.addEventListener("click", (e) =>{
         }
         console.log("name element", nameElement)
         let name = nameElement.innerText.slice(5).toLowerCase()
-        let hasReplaced = false;
+        let hasReplacedSpaces = false;
+        let hasReplacedOpenerBrackets = false;
+        let hasReplacedCloserBrackets = false;
         if(name.includes(" ")){ name = name.replaceAll(" ", "-")
-            hasReplaced = true;
+            hasReplacedSpaces = true;
+        }
+        if(name.includes("(")){name = name.replaceAll("(", "§")
+            hasReplacedOpenerBrackets = true
+        }
+        if(name.includes(")")){name = name.replaceAll(")", "£")
+            hasReplacedCloserBrackets = true
         }
         const divCountry = document.querySelector(`.${name}`)
         if(divCountry != null){
@@ -206,9 +214,10 @@ document.addEventListener("click", (e) =>{
         }
         else{
             if(!arrayNotEmpty(currentData)) return
-            let nameToSearch;
-            if(hasReplaced) nameToSearch = name.replaceAll("-", " ")
-            else nameToSearch = name
+            let nameToSearch = name
+            if(hasReplacedSpaces) nameToSearch = nameToSearch.replaceAll("-", " ")
+            if(hasReplacedCloserBrackets) nameToSearch = nameToSearch.replaceAll("£", ")")
+            if(hasReplacedOpenerBrackets) nameToSearch = nameToSearch.replaceAll("§", "(")
             const country = currentData.find(a => a.names.common.toLowerCase() === nameToSearch)
             if(country === undefined){
             console.log("Couldn't find the country")
