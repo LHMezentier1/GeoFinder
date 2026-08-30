@@ -33,7 +33,7 @@ function handleSearch(){
 }
 
 function handleStatistics(o = []){
-    est.innerHTML = ""
+    est.innerHTML = ""  
     if(!arrayNotEmpty(o)) return
     console.log("estatistics")
     console.log(o)
@@ -88,7 +88,7 @@ function addToList(isSearch = false, data = []){
             img.src = a.flag.url_png
             img.alt = a.flag.description
             img.classList.add("handleClick")
-            div.innerHTML = `<h1 class="handleClick name">Nome:${a.names.common}</h1> <h1 class="handleClick">Capital(is):${capitals}</h1>`
+            div.innerHTML = `<h1 class="handleClick name">Nome:${a.names.common}</h1> <h1 class="handleClick">Capital(is):${capitals}</h1> <h1 class="handleClick">População: ${a.population}</h1>`
             div.appendChild(img)
             div.classList.add("pais")
             div.classList.add("handleClick")
@@ -156,7 +156,7 @@ function seeRegions(order, isSearch = false){
             CarregarComRegiao("Europe", order, isSearch)
             break
         case "Oceania":
-            CarregarComRegiao("Ocenia", order, isSearch)
+            CarregarComRegiao("Oceania", order, isSearch)
             break
         default: CarregarTodos(order, isSearch)
     }
@@ -234,9 +234,3 @@ document.addEventListener("click", (e) =>{
     }
         }
     })
-
-
-
-
-
-
